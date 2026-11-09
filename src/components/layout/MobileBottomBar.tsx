@@ -31,7 +31,7 @@ export function MobileBottomBar({ view, onNavigate, onOpenSettings }: MobileBott
         type="button"
         onClick={() => onNavigate(id)}
         aria-current={active ? "page" : undefined}
-        className={`${ITEM} ${active ? "bg-blue-600 font-semibold text-white" : "text-slate-300 hover:bg-slate-800 hover:text-white"}`}
+        className={`${ITEM} ${active ? "bg-blue-600 font-semibold text-white" : "text-slate-300 hover:bg-slate-800 hover:text-slate-50"}`}
       >
         <Icon className="h-[18px] w-[18px]" strokeWidth={1.5} aria-hidden="true" />
         <span className="whitespace-nowrap">{short[locale]}</span>
@@ -61,7 +61,7 @@ export function MobileBottomBar({ view, onNavigate, onOpenSettings }: MobileBott
         </div>
 
         {right.map(renderItem)}
-        <button type="button" onClick={onOpenSettings} aria-haspopup="dialog" className={`${ITEM} text-slate-300 hover:bg-slate-800 hover:text-white`}>
+        <button type="button" onClick={onOpenSettings} aria-haspopup="dialog" className={`${ITEM} text-slate-300 hover:bg-slate-800 hover:text-slate-50`}>
           <Settings className="h-[18px] w-[18px]" strokeWidth={1.5} aria-hidden="true" />
           <span>Settings</span>
         </button>

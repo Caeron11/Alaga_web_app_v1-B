@@ -7,6 +7,17 @@
     <meta name="color-scheme" content="dark" />
     <meta name="description" content="ALAGA: medicine stock, physician schedules and ambulance dispatch for your barangay." />
     <title>ALAGA</title>
+    <script>
+      (function () {
+        try {
+          var s = JSON.parse(localStorage.getItem("alaga.settings") || "{}");
+          var root = document.documentElement;
+          if (s.theme === "light") root.classList.remove("dark");
+          if (typeof s.fontScale === "number" && s.fontScale >= 85 && s.fontScale <= 125) root.style.fontSize = s.fontScale + "%";
+          if (s.locale === "en") root.lang = "en";
+        } catch (e) {}
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />

@@ -72,7 +72,7 @@ export function CivicHeader({ onOpenSettings, onOpenNotifications }: CivicHeader
             type="button"
             onClick={onOpenNotifications}
             aria-label={openCalls > 0 ? `Notifications, ${openCalls} unread` : "Notifications"}
-            className={`relative inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-slate-300 transition-colors duration-150 ease-alaga hover:bg-slate-800 hover:text-white ${FOCUS}`}
+            className={`relative inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-slate-300 transition-colors duration-150 ease-alaga hover:bg-slate-800 hover:text-slate-50 ${FOCUS}`}
           >
             <Bell className="h-[18px] w-[18px]" strokeWidth={1.5} aria-hidden="true" />
             {openCalls > 0 && (

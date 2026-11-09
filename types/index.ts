@@ -8,6 +8,10 @@ export interface User {
   email: string;
   mobile: string;
   role: Role;
+  /** Staff or doctor ID, e.g. MD-25-0001 (officials only) */
+  staffId?: string;
+  /** Registered purok or street (residents only) */
+  address?: string;
   position?: string;
   avatarUrl: string | null;
 }
@@ -34,9 +38,28 @@ export interface Toast {
 export type StockStatus = "in_stock" | "low_stock" | "near_expiry" | "out_of_stock" | "expired";
 export type ExpiryBand = "d30" | "d60" | "d90" | "ok" | "expired";
 
+export type MedicineCategory =
+  | "Analgesic"
+  | "Antibiotic"
+  | "Antihistamine"
+  | "Cardiovascular"
+  | "Diabetes"
+  | "Gastrointestinal"
+  | "Pediatric";
+export type Prescription = "otc" | "rx";
+
+export const MEDICINE_CATEGORIES: readonly MedicineCategory[] = [
+  "Analgesic", "Antibiotic", "Antihistamine", "Cardiovascular", "Diabetes", "Gastrointestinal", "Pediatric",
+] as const;
+
 export interface MedicineBatch {
   id: string;
+  /** Display name with strength, e.g. "Paracetamol 250mg" */
   medicineName: string;
+  genericName: string;
+  brandName: string;
+  category: MedicineCategory;
+  prescription: Prescription;
   code: string;
   batchNo: string;
   expirationDate: string; // ISO date

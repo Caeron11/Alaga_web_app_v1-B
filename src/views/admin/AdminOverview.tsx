@@ -30,7 +30,7 @@ export function AdminOverview() {
     <>
       <PageHeader title="Overview" actions={<button type="button" onClick={() => setBookOpen(true)} className={BTN_ACTIVE}>Book consultation</button>} />
 
-      <dl className={`mb-10 flex flex-wrap divide-x divide-white/[0.08] border-y ${HAIRLINE}`}>
+      <dl className={`mb-10 flex flex-wrap divide-x divide-hairline border-y ${HAIRLINE}`}>
         <Stat label="Patients in queue" value={todayQueue.length} />
         <Stat label="Units on duty" value={activeUnitCount} />
         <Stat label="Medicine alerts" value={alerts} />

@@ -13,16 +13,34 @@ interface Persisted {
   fontScale: number;
   locale: Locale;
   theme: ThemeMode;
-  smsAlerts: boolean;
+  smsDoctorAvailability: boolean;
+  smsMedicineRestock: boolean;
 }
 
-const DEFAULTS: Persisted = { fontScale: FONT_SCALE_DEFAULT, locale: "fil", theme: "dark", smsAlerts: true };
+const DEFAULTS: Persisted = {
+  fontScale: FONT_SCALE_DEFAULT,
+  locale: "fil",
+  theme: "dark",
+  smsDoctorAvailability: true,
+  smsMedicineRestock: true,
+};
 
 const clampScale = (n: number): number => {
   if (!Number.isFinite(n)) return FONT_SCALE_DEFAULT;
   const snapped = Math.round(n / FONT_SCALE_STEP) * FONT_SCALE_STEP;
   return Math.min(FONT_SCALE_MAX, Math.max(FONT_SCALE_MIN, snapped));
 };
+
+/** Accept only known keys with valid types, so stale or tampered storage can't break the shell. */
+function sanitize(raw: Record<string, unknown>): Persisted {
+  return {
+    fontScale: typeof raw.fontScale === "number" ? clampScale(raw.fontScale) : DEFAULTS.fontScale,
+    locale: raw.locale === "en" || raw.locale === "fil" ? raw.locale : DEFAULTS.locale,
+    theme: raw.theme === "light" || raw.theme === "dark" ? raw.theme : DEFAULTS.theme,
+    smsDoctorAvailability: typeof raw.smsDoctorAvailability === "boolean" ? raw.smsDoctorAvailability : DEFAULTS.smsDoctorAvailability,
+    smsMedicineRestock: typeof raw.smsMedicineRestock === "boolean" ? raw.smsMedicineRestock : DEFAULTS.smsMedicineRestock,
+  };
+}
 
 interface SettingsValue extends Persisted {
   canIncrease: boolean;
@@ -33,32 +51,33 @@ interface SettingsValue extends Persisted {
   resetFont: () => void;
   setLocale: (l: Locale) => void;
   setTheme: (t: ThemeMode) => void;
-  setSmsAlerts: (on: boolean) => void;
+  toggleTheme: () => void;
+  setSmsDoctorAvailability: (on: boolean) => void;
+  setSmsMedicineRestock: (on: boolean) => void;
 }
 
 const SettingsContext = createContext<SettingsValue | null>(null);
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<Persisted>(() => {
-    const stored = loadJSON<Partial<Persisted>>(KEY, {});
-    return { ...DEFAULTS, ...stored, fontScale: clampScale(stored.fontScale ?? DEFAULTS.fontScale) };
-  });
+  const [state, setState] = useState<Persisted>(() => sanitize(loadJSON<Record<string, unknown>>(KEY, {})));
 
-  // Root font size: percentage of the browser default, so rem units scale everywhere
+  // Root font size as a percentage of the browser default, so every rem value scales
   useEffect(() => {
-    const root = document.documentElement;
-    root.style.fontSize = `${state.fontScale}%`;
-    return () => {
-      root.style.fontSize = "";
-    };
+    document.documentElement.style.fontSize = `${state.fontScale}%`;
   }, [state.fontScale]);
 
+  // Theme: the `.dark` class on <html> drives the CSS-variable palette in index.css
   useEffect(() => {
     const root = document.documentElement;
     root.classList.toggle("dark", state.theme === "dark");
     root.style.colorScheme = state.theme;
-    root.lang = state.locale === "fil" ? "fil" : "en";
-  }, [state.theme, state.locale]);
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", state.theme === "dark" ? "#0A0F1D" : "#FFFFFF");
+    document.querySelector('meta[name="color-scheme"]')?.setAttribute("content", state.theme);
+  }, [state.theme]);
+
+  useEffect(() => {
+    document.documentElement.lang = state.locale === "fil" ? "fil" : "en";
+  }, [state.locale]);
 
   useEffect(() => {
     saveJSON(KEY, state);
@@ -67,15 +86,10 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const patch = useCallback((p: Partial<Persisted>) => setState((s) => ({ ...s, ...p })), []);
 
   const setFontScale = useCallback((pct: number) => patch({ fontScale: clampScale(pct) }), [patch]);
-  const increaseFont = useCallback(
-    () => setState((s) => ({ ...s, fontScale: clampScale(s.fontScale + FONT_SCALE_STEP) })),
-    [],
-  );
-  const decreaseFont = useCallback(
-    () => setState((s) => ({ ...s, fontScale: clampScale(s.fontScale - FONT_SCALE_STEP) })),
-    [],
-  );
+  const increaseFont = useCallback(() => setState((s) => ({ ...s, fontScale: clampScale(s.fontScale + FONT_SCALE_STEP) })), []);
+  const decreaseFont = useCallback(() => setState((s) => ({ ...s, fontScale: clampScale(s.fontScale - FONT_SCALE_STEP) })), []);
   const resetFont = useCallback(() => patch({ fontScale: FONT_SCALE_DEFAULT }), [patch]);
+  const toggleTheme = useCallback(() => setState((s) => ({ ...s, theme: s.theme === "dark" ? "light" : "dark" })), []);
 
   const value = useMemo<SettingsValue>(
     () => ({
@@ -88,9 +102,11 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       resetFont,
       setLocale: (locale) => patch({ locale }),
       setTheme: (theme) => patch({ theme }),
-      setSmsAlerts: (smsAlerts) => patch({ smsAlerts }),
+      toggleTheme,
+      setSmsDoctorAvailability: (smsDoctorAvailability) => patch({ smsDoctorAvailability }),
+      setSmsMedicineRestock: (smsMedicineRestock) => patch({ smsMedicineRestock }),
     }),
-    [state, setFontScale, increaseFont, decreaseFont, resetFont, patch],
+    [state, setFontScale, increaseFont, decreaseFont, resetFont, toggleTheme, patch],
   );
 
   return <SettingsContext.Provider value={value}>{children}</SettingsContext.Provider>;

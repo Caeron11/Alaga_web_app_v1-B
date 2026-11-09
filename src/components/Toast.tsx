@@ -46,7 +46,7 @@ export function ToastViewport() {
                 type="button"
                 onClick={() => dismiss(t.id)}
                 aria-label={`Dismiss: ${t.title}`}
-                className={`inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-slate-300 transition-colors duration-150 ease-alaga hover:bg-slate-800 hover:text-white ${FOCUS}`}
+                className={`inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-slate-300 transition-colors duration-150 ease-alaga hover:bg-slate-800 hover:text-slate-50 ${FOCUS}`}
               >
                 <X className="h-4 w-4" strokeWidth={1.5} aria-hidden="true" />
               </button>

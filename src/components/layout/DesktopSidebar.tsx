@@ -51,7 +51,7 @@ export function DesktopSidebar({ view, onNavigate, collapsed, onToggle }: Deskto
                   aria-label={collapsed ? label[locale] : undefined}
                   title={collapsed ? label[locale] : undefined}
                   className={`${ROW} ${collapsed ? "justify-center px-0" : ""} ${
-                    active ? "bg-blue-600 font-semibold text-white" : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                    active ? "bg-blue-600 font-semibold text-white" : "text-slate-300 hover:bg-slate-800 hover:text-slate-50"
                   }`}
                 >
                   <Icon className="h-[18px] w-[18px] shrink-0" strokeWidth={1.5} aria-hidden="true" />
@@ -69,7 +69,7 @@ export function DesktopSidebar({ view, onNavigate, collapsed, onToggle }: Deskto
           onClick={logout}
           aria-label={collapsed ? "Log out" : undefined}
           title={collapsed ? "Log out" : undefined}
-          className={`${ROW} text-slate-300 hover:bg-slate-800 hover:text-white ${collapsed ? "justify-center px-0" : ""}`}
+          className={`${ROW} text-slate-300 hover:bg-slate-800 hover:text-slate-50 ${collapsed ? "justify-center px-0" : ""}`}
         >
           <LogOut className="h-[18px] w-[18px] shrink-0" strokeWidth={1.5} aria-hidden="true" />
           {!collapsed && <span>Log out</span>}
@@ -79,7 +79,7 @@ export function DesktopSidebar({ view, onNavigate, collapsed, onToggle }: Deskto
           onClick={onToggle}
           aria-expanded={!collapsed}
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          className={`${ROW} text-slate-400 hover:bg-slate-800 hover:text-white ${collapsed ? "justify-center px-0" : ""}`}
+          className={`${ROW} text-slate-400 hover:bg-slate-800 hover:text-slate-50 ${collapsed ? "justify-center px-0" : ""}`}
         >
           {collapsed ? (
             <PanelLeftOpen className="h-[18px] w-[18px]" strokeWidth={1.5} aria-hidden="true" />

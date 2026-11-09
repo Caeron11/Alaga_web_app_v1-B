@@ -84,7 +84,7 @@ export function PhysicianScheduleView({ staff }: { staff: boolean }) {
                     <tr>
                       <th scope="col" className="px-4 py-3 font-medium">Doctor and specialty</th>
                       {DAYS.map((d, i) => (
-                        <th key={d} scope="col" className={`px-2 py-3 text-center font-medium ${i === today ? "text-white" : ""}`}>
+                        <th key={d} scope="col" className={`px-2 py-3 text-center font-medium ${i === today ? "text-slate-50" : ""}`}>
                           {d}
                         </th>
                       ))}

@@ -45,12 +45,12 @@ export const stockStatus = (b: MedicineBatch, now: Date = new Date()): StockStat
 const iso = (offsetDays: number): string => new Date(Date.now() + offsetDays * DAY_MS).toISOString().slice(0, 10);
 
 const SEED_BATCHES: MedicineBatch[] = [
-  { id: "b-001", medicineName: "Paracetamol 250mg", code: "PEC-250", batchNo: "PC25-0412", expirationDate: iso(210), stock: 18, minimum: 40 },
-  { id: "b-002", medicineName: "Amoxicillin 500mg", code: "AMX-500", batchNo: "AM50-0388", expirationDate: iso(150), stock: 22, minimum: 50 },
-  { id: "b-003", medicineName: "Erceflora 5mL", code: "ERF-5", batchNo: "ER05-0207", expirationDate: iso(21), stock: 36, minimum: 20 },
-  { id: "b-004", medicineName: "Cetirizine 10mg", code: "CTZ-5", batchNo: "CT10-0551", expirationDate: iso(300), stock: 0, minimum: 30 },
-  { id: "b-005", medicineName: "Losartan 50mg", code: "LOS-50", batchNo: "LS50-0119", expirationDate: iso(75), stock: 120, minimum: 60 },
-  { id: "b-006", medicineName: "Metformin 500mg", code: "MET-500", batchNo: "MF50-0630", expirationDate: iso(400), stock: 240, minimum: 100 },
+  { id: "b-001", medicineName: "Paracetamol 250mg", genericName: "Paracetamol", brandName: "Biogesic", category: "Analgesic", prescription: "otc", code: "PEC-250", batchNo: "PC25-0412", expirationDate: iso(210), stock: 18, minimum: 40 },
+  { id: "b-002", medicineName: "Amoxicillin 500mg", genericName: "Amoxicillin", brandName: "Amoxil", category: "Antibiotic", prescription: "rx", code: "AMX-500", batchNo: "AM50-0388", expirationDate: iso(150), stock: 22, minimum: 50 },
+  { id: "b-003", medicineName: "Erceflora 5mL", genericName: "Bacillus clausii", brandName: "Erceflora", category: "Gastrointestinal", prescription: "otc", code: "ERF-5", batchNo: "ER05-0207", expirationDate: iso(21), stock: 36, minimum: 20 },
+  { id: "b-004", medicineName: "Cetirizine 10mg", genericName: "Cetirizine", brandName: "Allerkid", category: "Antihistamine", prescription: "otc", code: "CTZ-5", batchNo: "CT10-0551", expirationDate: iso(300), stock: 0, minimum: 30 },
+  { id: "b-005", medicineName: "Losartan 50mg", genericName: "Losartan", brandName: "Cozaar", category: "Cardiovascular", prescription: "rx", code: "LOS-50", batchNo: "LS50-0119", expirationDate: iso(75), stock: 120, minimum: 60 },
+  { id: "b-006", medicineName: "Metformin 500mg", genericName: "Metformin", brandName: "Glucophage", category: "Diabetes", prescription: "rx", code: "MET-500", batchNo: "MF50-0630", expirationDate: iso(400), stock: 240, minimum: 100 },
 ];
 
 const SEED_PHYSICIANS: Physician[] = [

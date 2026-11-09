@@ -3,13 +3,33 @@
 @tailwind utilities;
 
 @layer base {
+  /* Dark (default). Triplets are "R G B" so Tailwind can apply alpha. */
   :root {
-    --surface-deep: #0a0f1d;
-    --surface-page: #0f172a;
-    --text-primary: #f1f5f9;
-    --text-secondary: #cbd5e1;
-    --text-muted: #94a3b8;
+    --slate-50: 248 250 252; --slate-100: 241 245 249; --slate-200: 226 232 240; --slate-300: 203 213 225;
+    --slate-400: 148 163 184; --slate-500: 100 116 139; --slate-600: 71 85 105; --slate-700: 51 65 85;
+    --slate-800: 30 41 59; --slate-900: 15 23 42; --slate-950: 2 6 23;
+    --navy-950: 10 15 29; --navy-900: 15 23 42;
+    --emerald-300: 110 231 183; --emerald-400: 52 211 153; --amber-300: 252 211 77; --orange-300: 253 186 116;
+    --red-300: 252 165 165; --red-400: 248 113 113;
+    --rose-200: 254 205 211; --rose-300: 253 164 175; --rose-400: 251 113 133; --rose-950: 76 5 25;
+    --sky-300: 125 211 252; --sky-400: 56 189 248;
     --hairline: rgba(241, 245, 249, 0.08);
+    color-scheme: dark;
+  }
+
+  /* Light: the slate ramp is mirrored so text, surfaces and borders flip together;
+     semantic hues step down to 600-800 for 4.5:1 on white. */
+  html:not(.dark) {
+    --slate-50: 15 23 42; --slate-100: 15 23 42; --slate-200: 30 41 59; --slate-300: 51 65 85;
+    --slate-400: 71 85 105; --slate-500: 100 116 139; --slate-600: 148 163 184; --slate-700: 203 213 225;
+    --slate-800: 226 232 240; --slate-900: 241 245 249; --slate-950: 255 255 255;
+    --navy-950: 255 255 255; --navy-900: 241 245 249;
+    --emerald-300: 4 120 87; --emerald-400: 5 150 105; --amber-300: 180 83 9; --orange-300: 194 65 12;
+    --red-300: 185 28 28; --red-400: 220 38 38;
+    --rose-200: 159 18 57; --rose-300: 190 18 60; --rose-400: 225 29 72; --rose-950: 255 228 230;
+    --sky-300: 3 105 161; --sky-400: 2 132 199;
+    --hairline: rgba(15, 23, 42, 0.12);
+    color-scheme: light;
   }
 
   *, *::before, *::after { box-sizing: border-box; }
@@ -25,8 +45,8 @@
     margin: 0;
     min-height: 100dvh;
     overflow-x: hidden;
-    background: var(--surface-deep);
-    color: var(--text-primary);
+    background: rgb(var(--navy-950));
+    color: rgb(var(--slate-100));
     font-family: "Geist", "Inter", ui-sans-serif, system-ui, sans-serif;
     font-variant-numeric: tabular-nums;
     -webkit-font-smoothing: antialiased;
@@ -38,7 +58,7 @@
 
   :focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px #0a0f1d, 0 0 0 4px #60a5fa;
+    box-shadow: 0 0 0 2px rgb(var(--navy-950)), 0 0 0 4px #3b82f6;
   }
 
   @media (prefers-reduced-motion: reduce) {

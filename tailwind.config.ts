@@ -1,14 +1,28 @@
 import type { Config } from "tailwindcss";
 
+/** Colour tokens resolve through CSS variables (see src/index.css), so every existing
+ *  `slate-*` / semantic utility re-colours automatically when `.dark` is removed. */
+const v = (name: string) => `rgb(var(--${name}) / <alpha-value>)`;
+
 const config: Config = {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   darkMode: "class",
   theme: {
     extend: {
       colors: {
-        navy: { 950: "#0A0F1D", 900: "#0F172A" },
+        slate: {
+          50: v("slate-50"), 100: v("slate-100"), 200: v("slate-200"), 300: v("slate-300"), 400: v("slate-400"),
+          500: v("slate-500"), 600: v("slate-600"), 700: v("slate-700"), 800: v("slate-800"), 900: v("slate-900"), 950: v("slate-950"),
+        },
+        navy: { 950: v("navy-950"), 900: v("navy-900") },
+        hairline: "var(--hairline)",
+        emerald: { 300: v("emerald-300"), 400: v("emerald-400") },
+        amber: { 300: v("amber-300") },
+        orange: { 300: v("orange-300") },
+        red: { 300: v("red-300"), 400: v("red-400") },
+        rose: { 200: v("rose-200"), 300: v("rose-300"), 400: v("rose-400"), 950: v("rose-950") },
+        sky: { 300: v("sky-300"), 400: v("sky-400"), accent: "#38BDF8", hover: "#0EA5E9" },
         cobalt: { DEFAULT: "#2563EB", hover: "#3B82F6" },
-        sky: { accent: "#38BDF8", hover: "#0EA5E9" },
         emergency: { DEFAULT: "#DC2626", soft: "#E11D48" },
         ok: "#4CC38A",
       },
