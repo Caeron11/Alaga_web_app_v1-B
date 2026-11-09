@@ -12,6 +12,8 @@ export interface User {
   staffId?: string;
   /** Registered purok or street (residents only) */
   address?: string;
+  /** Health center station or jurisdiction (officials only) */
+  station?: string;
   position?: string;
   avatarUrl: string | null;
 }
@@ -202,3 +204,75 @@ export interface PhysicianFilters {
 }
 
 export const SPECIALTIES: readonly Specialty[] = ["General Medicine", "Pediatrics", "Orthopedics", "OB-GYN", "Cardiology"] as const;
+
+/* ---------- Health official registration ---------- */
+export type ProfessionalTitle = "" | "Dr." | "MD" | "RN" | "BHW";
+
+export type ClinicalRole =
+  | "md_general"
+  | "md_orthopedics"
+  | "bhw_triage"
+  | "head_nurse"
+  | "ambulance_dispatcher";
+
+export const CLINICAL_ROLES: readonly ClinicalRole[] = [
+  "md_general",
+  "md_orthopedics",
+  "bhw_triage",
+  "head_nurse",
+  "ambulance_dispatcher",
+] as const;
+
+export const CLINICAL_ROLE_LABEL: Record<ClinicalRole, string> = {
+  md_general: "Medical Doctor - General Medicine",
+  md_orthopedics: "Medical Doctor - Orthopedics",
+  bhw_triage: "Barangay Health Worker / Triage Officer",
+  head_nurse: "Head Nurse",
+  ambulance_dispatcher: "Ambulance Fleet Dispatcher",
+};
+
+export interface OfficialRegistrationForm {
+  fullName: string;
+  title: ProfessionalTitle;
+  staffId: string;
+  clinicalRole: ClinicalRole | "";
+  station: string;
+  mobile: string;
+  pin: string;
+  confirmPin: string;
+  accessCode: string;
+}
+
+export type OfficialFormField = keyof OfficialRegistrationForm;
+
+/** Error codes keep validation independent of language; views map them to copy. */
+export type OfficialErrorCode =
+  | "required"
+  | "name_short"
+  | "id_format"
+  | "mobile_format"
+  | "pin_format"
+  | "pin_weak"
+  | "pin_mismatch"
+  | "code_format"
+  | "bad_code"
+  | "duplicate_id"
+  | "unavailable";
+
+export type OfficialFieldErrors = Partial<Record<OfficialFormField, OfficialErrorCode>>;
+
+export type RegisterOfficialResult =
+  | { ok: true; role: Role }
+  | { ok: false; code: OfficialErrorCode; field?: OfficialFormField };
+
+export const EMPTY_OFFICIAL_FORM: OfficialRegistrationForm = {
+  fullName: "",
+  title: "",
+  staffId: "",
+  clinicalRole: "",
+  station: "",
+  mobile: "",
+  pin: "",
+  confirmPin: "",
+  accessCode: "",
+};

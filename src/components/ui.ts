@@ -17,3 +17,7 @@ export const BADGE =
   "inline-flex min-w-fit items-center justify-center whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-semibold";
 
 export const HAIRLINE = "border-hairline";
+
+/** Deep slate card: solid tonal contrast instead of translucent hairlines. */
+export const CARD = "rounded-xl border border-slate-800/90 bg-slate-900/90 shadow-sm";
+export const CARD_INTERACTIVE = `${CARD} transition-all duration-150 ease-alaga hover:border-slate-700/80 hover:bg-slate-850`;

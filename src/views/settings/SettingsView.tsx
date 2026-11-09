@@ -23,6 +23,7 @@ const COPY: Record<Locale, Record<string, string>> = {
     name: "Pangalan",
     contact: "Contact number",
     address: "Purok o address",
+    station: "Istasyon",
     appearance: "Itsura at tema",
     light: "Light Mode",
     dark: "Dark Mode",
@@ -46,6 +47,7 @@ const COPY: Record<Locale, Record<string, string>> = {
     name: "Name",
     contact: "Contact number",
     address: "Purok or street address",
+    station: "Station",
     appearance: "Appearance and theme",
     light: "Light Mode",
     dark: "Dark Mode",
@@ -138,6 +140,7 @@ export function SettingsView() {
           {row(t.name, user.name)}
           {row(t.contact, user.mobile)}
           {user.address && row(t.address, user.address)}
+          {user.station && row(t.station, user.station)}
         </dl>
       </Section>
 

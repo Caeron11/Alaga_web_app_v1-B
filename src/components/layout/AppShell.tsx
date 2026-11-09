@@ -43,7 +43,7 @@ export function AppShell({ view, onNavigate, children }: AppShellProps) {
         tabIndex={-1}
         className={`min-h-dvh pt-14 transition-[padding] duration-300 ease-alaga focus:outline-none ${collapsed ? "lg:pl-[72px]" : "lg:pl-64"}`}
       >
-        <div className="mx-auto max-w-[1440px] p-4 pb-24 sm:p-6 sm:pb-24 lg:p-8">{children}</div>
+        <div className="mx-auto max-w-[1440px] px-4 py-4 pb-28 sm:px-6 sm:py-6 sm:pb-28 lg:px-8 lg:py-8 lg:pb-8">{children}</div>
       </main>
       <MobileBottomBar view={view} onNavigate={onNavigate} onOpenSettings={openSettings} />
       <SettingsDrawer open={settingsOpen} onClose={closeSettings} />

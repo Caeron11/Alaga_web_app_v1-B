@@ -2,8 +2,10 @@ import { Eye, EyeOff, ShieldCheck } from "lucide-react";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Field } from "../../components/Field";
 import { BTN_ACTIVE, BTN_GHOST, FIELD, FOCUS } from "../../components/ui";
-import { PIN_PATTERN, useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import { useSettings } from "../../context/SettingsContext";
+import { PIN_PATTERN } from "../../lib/credentials";
+import { RegisterView } from "./RegisterView";
 import type { Locale, Role } from "../../../types";
 
 type Mode = "citizen" | "admin";
@@ -25,7 +27,6 @@ const COPY: Record<Locale, Record<string, string>> = {
     officialCta: "Pumasok sa Portal (Official)",
     noAccount: "Wala pang rehistradong account?",
     register: "Magrehistro rito",
-    registerNote: "Punan ang form para magrehistro bilang residente. Awtomatiko kang mairerehistro sa unang pasok.",
     showPin: "Ipakita ang PIN",
     hidePin: "Itago ang PIN",
   },
@@ -45,7 +46,6 @@ const COPY: Record<Locale, Record<string, string>> = {
     officialCta: "Enter Portal (Official)",
     noAccount: "No registered account yet?",
     register: "Register here",
-    registerNote: "Fill in the form to register as a resident. You are registered automatically on first entry.",
     showPin: "Show PIN",
     hidePin: "Hide PIN",
   },
@@ -62,7 +62,7 @@ export function LoginView() {
 
   const [mode, setMode] = useState<Mode>("citizen");
   const [error, setError] = useState<string | null>(null);
-  const [registering, setRegistering] = useState(false);
+  const [screen, setScreen] = useState<"login" | "register">("login");
 
   const [name, setName] = useState("");
   const [mobile, setMobile] = useState("");
@@ -74,7 +74,6 @@ export function LoginView() {
   const [pin, setPin] = useState("");
   const [showPin, setShowPin] = useState(false);
 
-  const nameRef = useRef<HTMLInputElement>(null);
   const pinRef = useRef<HTMLInputElement>(null);
 
   // Clear any stale /citizen or /admin path left over from a previous session
@@ -89,7 +88,6 @@ export function LoginView() {
   const switchMode = (m: Mode) => {
     setMode(m);
     setError(null);
-    setRegistering(false);
     setStep(1);
     setPin("");
     setShowPin(false);
@@ -102,7 +100,7 @@ export function LoginView() {
     redirect(res.role);
   };
 
-  const submitOfficial = (e: FormEvent) => {
+  const submitOfficial = async (e: FormEvent) => {
     e.preventDefault();
     if (step === 1) {
       const res = checkOfficialIdentity({ staffId, name: staffName });
@@ -111,7 +109,7 @@ export function LoginView() {
       setStep(2);
       return;
     }
-    const res = loginOfficial({ staffId, name: staffName }, pin);
+    const res = await loginOfficial({ staffId, name: staffName }, pin);
     if (!res.ok) {
       setError(res.error);
       setPin("");
@@ -120,11 +118,7 @@ export function LoginView() {
     redirect(res.role);
   };
 
-  const startRegister = () => {
-    switchMode("citizen");
-    setRegistering(true);
-    window.setTimeout(() => nameRef.current?.focus(), 0);
-  };
+  const startRegister = () => setScreen("register");
 
   const tab = (m: Mode, label: string) => (
     <button
@@ -139,6 +133,8 @@ export function LoginView() {
       {label}
     </button>
   );
+
+  if (screen === "register") return <RegisterView onBack={() => setScreen("login")} />;
 
   return (
     <main className="flex min-h-dvh items-center justify-center bg-navy-950 p-4 pt-safe">
@@ -164,13 +160,8 @@ export function LoginView() {
 
         {mode === "citizen" ? (
           <form onSubmit={submitResident} noValidate className="space-y-4">
-            {registering && (
-              <p role="status" className="text-sm text-slate-300">
-                {t.registerNote}
-              </p>
-            )}
             <Field label={t.name}>
-              <input ref={nameRef} className={FIELD} value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" />
+              <input className={FIELD} value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" />
             </Field>
             <Field label={t.mobile}>
               <input
