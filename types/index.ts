@@ -1,0 +1,181 @@
+export type Role = "resident" | "health_worker" | "official";
+export type Locale = "fil" | "en";
+export type ThemeMode = "dark" | "light";
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  mobile: string;
+  role: Role;
+  position?: string;
+  avatarUrl: string | null;
+}
+
+export interface LGU {
+  /** Display name, e.g. "PARAÑAQUE LGU" */
+  label: string;
+  city: string;
+  barangay?: string;
+  source: "gps" | "manual" | "fallback";
+}
+
+/* ---------- Toasts ---------- */
+export type ToastKind = "success" | "info" | "warning" | "error";
+export interface Toast {
+  id: string;
+  kind: ToastKind;
+  title: string;
+  description?: string;
+  durationMs: number;
+}
+
+/* ---------- Medicine ---------- */
+export type StockStatus = "in_stock" | "low_stock" | "near_expiry" | "out_of_stock" | "expired";
+export type ExpiryBand = "d30" | "d60" | "d90" | "ok" | "expired";
+
+export interface MedicineBatch {
+  id: string;
+  medicineName: string;
+  code: string;
+  batchNo: string;
+  expirationDate: string; // ISO date
+  stock: number;
+  minimum: number;
+}
+
+export interface DispenseRecord {
+  id: string;
+  batchId: string;
+  medicineName: string;
+  quantity: number;
+  recipient: string;
+  prescribingDoctor: string;
+  reference: string;
+  dispensedBy: string;
+  timestamp: string; // ISO datetime
+}
+
+export interface DispenseInput {
+  batchId: string;
+  quantity: number;
+  recipient: string;
+  prescribingDoctor: string;
+  reference: string;
+}
+
+export interface NearbyBarangay {
+  id: string;
+  name: string;
+  address: string;
+  availableCodes: string[];
+  available: boolean;
+}
+
+export interface Requisition {
+  id: string;
+  fromBarangayId: string;
+  medicineName: string;
+  quantity: number;
+  status: "pending" | "approved" | "fulfilled" | "declined";
+  requestedAt: string;
+}
+
+/* ---------- Physicians & appointments ---------- */
+export type Specialty = "General Medicine" | "Pediatrics" | "Orthopedics" | "OB-GYN" | "Cardiology";
+export type ShiftType = "morning" | "afternoon" | "weekend";
+export type Availability = "available" | "full" | "on_leave";
+export type ConsultType = "face_to_face" | "tele";
+
+export interface Physician {
+  id: string;
+  name: string;
+  specialty: Specialty;
+  shift: ShiftType;
+  consultType: ConsultType;
+  availability: Availability;
+  capacity: number;
+  booked: number;
+  days: number[]; // 0 = Mon … 6 = Sun
+  hours: string;
+}
+
+export type Priority = "routine" | "urgent" | "emergency";
+
+export interface BookingInput {
+  physicianId: string;
+  patientName: string;
+  contact: string;
+  chiefComplaint: string;
+  priority: Priority;
+}
+
+export interface Appointment extends BookingInput {
+  id: string;
+  ticket: string; // ALG-BK-2026-XXXX
+  physicianName: string;
+  bookedAt: string;
+  status: "scheduled" | "in_queue" | "done" | "cancelled";
+}
+
+export interface Announcement {
+  id: string;
+  title: string;
+  body: string;
+  date: string;
+}
+
+/* ---------- V1 linear ambulance dispatch (no map) ---------- */
+export type UnitStatus = "standby" | "en_route" | "at_hospital" | "off_duty";
+export type Triage = "red" | "yellow" | "green";
+export type DispatchMilestone = "request_logged" | "unit_assigned" | "en_route" | "arrived";
+
+export const DISPATCH_MILESTONES: readonly DispatchMilestone[] = [
+  "request_logged",
+  "unit_assigned",
+  "en_route",
+  "arrived",
+] as const;
+
+export interface AmbulanceUnit {
+  id: string; // "A#01"
+  name: string; // "Unit A#01"
+  plate: string;
+  contact: string;
+  baseStation: string;
+  status: UnitStatus;
+  crew: string;
+  incidentId: string | null;
+}
+
+export interface EmergencyRequestInput {
+  zone: string;
+  landmark: string;
+  manualAddress?: string;
+  triage: Triage;
+  chiefComplaint: string;
+  callerName: string;
+  callerContact: string;
+}
+
+export interface EmergencyIncident extends EmergencyRequestInput {
+  id: string;
+  createdAt: string;
+  milestone: DispatchMilestone;
+  assignedUnitId: string | null;
+  etaMinutes: number | null;
+  closed: boolean;
+}
+
+export const ZONE_OPTIONS = ["Purok 1", "Purok 2", "Purok 3", "Purok 4", "Purok 5"] as const;
+export const LANDMARK_OPTIONS = ["Covered Court", "Barangay Hall", "Health Center", "Public Market", "Elementary School"] as const;
+
+/* ---------- Physician roster filters ---------- */
+export interface PhysicianFilters {
+  specialty: Specialty | "all";
+  shift: ShiftType | "all";
+  availability: Availability | "all";
+  consultType: ConsultType | "all";
+}
+
+export const SPECIALTIES: readonly Specialty[] = ["General Medicine", "Pediatrics", "Orthopedics", "OB-GYN", "Cardiology"] as const;
